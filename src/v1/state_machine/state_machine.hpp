@@ -1,7 +1,15 @@
+/**
+ * @file src/v1/state_machine/state_machine.hpp
+ * @brief State machine logic for State Machine.
+ */
+
 #include "interfaces/car_state.hpp"
 #include <cstdint>
 
 namespace world_exe::v1::state_machine {
+/**
+ * @brief V1 版本的简单状态机，根据识别结果选择目标。
+ */
 class StateMachine final : public interfaces::ICarState {
 public:
     const ICarState& Update(const enumeration::CarIDFlag& car_detected);

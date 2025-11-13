@@ -1,3 +1,8 @@
+/**
+ * @file include/data/armor_camera_spacing.hpp
+ * @brief Data definitions for Armor Camera Spacing.
+ */
+
 #pragma once
 
 #include "enum/armor_id.hpp"
@@ -8,16 +13,15 @@
 #include <opencv2/core/types.hpp>
 
 namespace world_exe::data {
+/**
+ * @brief 相机坐标系下装甲板位姿描述。
+ */
 struct ArmorCameraSpacing {
+    /// 目标装甲板 ID（若未知则为 Unknow）。
     enumeration::ArmorIdFlag id = enumeration::ArmorIdFlag::Unknow;
-    /// 以ROS系，光轴方向为x, 上为z,
-    /// 四个点为： 1->左上 2->右上 3->右下 4->左下,
-    /// 点实际坐标为相机坐标系下的笛卡尔坐标，单位米（m）,
-    /// 原点位于光心
+    /// 装甲板中心在相机坐标系下的位置（X: 光轴, Z: 向上），单位 m。
     Eigen::Vector3d position;
-    /// 基础以ROS系，光轴方向为x, 上为z
-    /// 装甲以ROS系，数字向车为x, 短轴数字向上为z
-    /// 表示 基础-》装甲板
+    /// 表示从相机基座到装甲板局部坐标系（数字向前 / 向上）的旋转。
     Eigen::Quaterniond orientation;
 };
 }

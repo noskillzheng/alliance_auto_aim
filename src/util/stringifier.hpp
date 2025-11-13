@@ -1,3 +1,8 @@
+/**
+ * @file src/util/stringifier.hpp
+ * @brief Utility helper for Stringifier.
+ */
+
 #pragma once
 
 #include <string>

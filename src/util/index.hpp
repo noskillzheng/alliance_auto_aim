@@ -1,3 +1,8 @@
+/**
+ * @file src/util/index.hpp
+ * @brief Utility helper for Index.
+ */
+
 #pragma once
 
 #include <vector>

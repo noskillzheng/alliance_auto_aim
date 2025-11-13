@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/predictor/car/car_predictor_ekf.hpp
+ * @brief Predictor component for Car Predictor Ekf.
+ */
+
 #pragma once
 
 #include "data/armor_gimbal_control_spacing.hpp"

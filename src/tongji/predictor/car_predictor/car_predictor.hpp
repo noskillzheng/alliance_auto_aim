@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/predictor/car_predictor/car_predictor.hpp
+ * @brief Predictor component for Car Predictor.
+ */
+
 #pragma once
 
 #include <cstdlib>
@@ -17,17 +22,31 @@
 
 namespace world_exe::tongji::predictor {
 
+/**
+ * @brief 基于 EKF 的整车预测器，输出未来装甲板轨迹。
+ */
 class CarPredictor final : public interfaces::IPredictor {
 public:
     using PredictorModel = EKFModel<11, 4>;
     using EKF            = ExtendedKalmanFilter<PredictorModel>;
 
+    /**
+     * @brief 使用现有 EKF 状态构造快照。
+     */
     explicit CarPredictor(
         const EKF& ekf, const PredictorModel& model, const data::TimeStamp& time_stamp)
         : ekf_(ekf)
         , model_(model)
         , time_stamp_(time_stamp) { }
 
+    /**
+     * @brief 依据单帧装甲观测初始化预测器。
+     *
+     * @param armor_xyz_in_gimbal 云台坐标系位姿
+     * @param armor_ypr_in_gimbal 欧拉角
+     * @param car_id 车辆 ID
+     * @param time_stamp 观测时间
+     */
     explicit CarPredictor(const Eigen::Vector3d& armor_xyz_in_gimbal,
         const Eigen::Vector3d& armor_ypr_in_gimbal, const enumeration::CarIDFlag& car_id,
         const data::TimeStamp& time_stamp)
@@ -55,6 +74,9 @@ public:
 
     const enumeration ::ArmorIdFlag& GetId() const override { return car_id_; }
 
+    /**
+     * @brief 预测指定时间的装甲板集合。
+     */
     std ::shared_ptr<interfaces::IArmorInGimbalControl> Predictor(
         const data ::TimeStamp& time_stamp) const override {
         const auto ekf_x = this->GetPredictedX((time_stamp - time_stamp_).to_seconds());
@@ -72,12 +94,17 @@ public:
         return std::make_shared<InGimbalControlArmor>(armors, time_stamp_);
     }
 
+    /// 返回当前 EKF 状态向量。
     EKF::XVec GetEkfX() const { return ekf_->x; }
+    /// 返回内部使用的预测模型。
     auto GetModel() const -> const PredictorModel { return model_; }
+    /// 返回 EKF 实例。
     auto GetEkf() const -> const EKF { return ekf_.value(); }
 
+    /// 最近一次更新的时间戳。
     data::TimeStamp LastSeen() const { return time_stamp_; }
 
+    /// 获取未来 dt 秒时各装甲板的 XYZA。
     auto GetPredictedXYZAList(const double& dt) -> std::vector<Eigen::Vector4d> const {
         const auto [x_n, P_n] = ekf_->PredictOnce(dt);
         return model_.GetArmorXYZAList(x_n);
@@ -88,6 +115,9 @@ public:
         return x_n;
     }
 
+    /**
+     * @brief 使用新观测更新状态。
+     */
     void Update(const data::TimeStamp time_stamp, const Eigen::Vector3d& armor_xyz_in_gimbal,
         const Eigen::Vector3d& armor_ypr_in_gimbal, const Eigen::Vector3d& armor_ypd_in_gimbal) {
 
@@ -103,6 +133,7 @@ public:
         time_stamp_ = time_stamp;
     }
 
+    /// 判断 EKF 是否已收敛到合理半径/长度。
     bool IsConverged() const {
         auto r_ok = ekf_->x[8] > 0.05 && ekf_->x[8] < 0.5;
         auto l_ok = ekf_->x[8] + ekf_->x[9] > 0.05 && ekf_->x[8] + ekf_->x[9] < 0.5;
@@ -112,6 +143,7 @@ public:
         // util::logger::logger()->debug("[Target] r={:.3f}, l={:.3f}", ekf_->x[8], ekf_->x[9]);
         return true;
     }
+    /// 判断目标是否已出现足够次数。
     auto IsAppeared() -> bool {
         const int required_count = (model_.GetID() == enumeration::CarIDFlag::Outpost) ? 10 : 3;
         return update_count_ > required_count;

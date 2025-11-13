@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/pnpsolver/armor_pnp_solver.cpp
+ * @brief Pose solving utilities for Armor Pnp Solver.
+ */
+
 #include <memory>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/core/mat.hpp>

@@ -1,3 +1,8 @@
+/**
+ * @file src/util/cast.cpp
+ * @brief Utility helper for Cast.
+ */
+
 #include "utils/cast.hpp"
 #include "enum/armor_id.hpp"
 #include <Eigen/src/Core/Matrix.h>

@@ -1,3 +1,8 @@
+/**
+ * @file src/util/logger.cpp
+ * @brief Utility helper for Logger.
+ */
+
 #include "logger.hpp"
 
 #include <chrono>

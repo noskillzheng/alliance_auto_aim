@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/solver/solver.cpp
+ * @brief Pose solving utilities for Solver.
+ */
+
 #include "solver.hpp"
 
 #include <Eigen/src/Core/Matrix.h>

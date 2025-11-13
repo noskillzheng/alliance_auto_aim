@@ -1,3 +1,8 @@
+/**
+ * @file include/event_bus.hpp
+ * @brief Alliance auto-aim component for Event Bus.
+ */
+
 #pragma once
 
 #warning "include <core/event_bus.hpp> but <event_bus.hpp>"

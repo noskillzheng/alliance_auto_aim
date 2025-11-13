@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/predictor/in_gimbal_control_armor.hpp
+ * @brief Predictor component for In Gimbal Control Armor.
+ */
+
 #pragma once
 
 #include <ctime>
@@ -10,6 +15,9 @@
 
 namespace world_exe::tongji::predictor {
 
+/**
+ * @brief `IArmorInGimbalControl` 的简单实现，持有一次预测输出。
+ */
 class InGimbalControlArmor final : public interfaces::IArmorInGimbalControl {
 public:
     explicit InGimbalControlArmor(const std::vector<data::ArmorGimbalControlSpacing>& all_armors,

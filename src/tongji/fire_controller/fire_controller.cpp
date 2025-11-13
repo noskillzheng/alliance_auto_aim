@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/fire_controller/fire_controller.cpp
+ * @brief Fire-control component for Fire Controller.
+ */
+
 #include "fire_controller.hpp"
 
 #include <chrono>

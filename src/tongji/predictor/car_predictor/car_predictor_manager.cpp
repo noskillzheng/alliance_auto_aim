@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/predictor/car_predictor/car_predictor_manager.cpp
+ * @brief Predictor component for Car Predictor Manager.
+ */
+
 #include "car_predictor_manager.hpp"
 
 #include <cstdint>

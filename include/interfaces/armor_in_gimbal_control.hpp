@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/armor_in_gimbal_control.hpp
+ * @brief Interface abstraction for Armor In Gimbal Control.
+ */
+
 #pragma once
 
 #include "data/armor_gimbal_control_spacing.hpp"
@@ -8,18 +13,15 @@
 namespace world_exe::interfaces {
 
 /**
- * @brief
-    某一确定时刻
-    云台控制指令使用的坐标系（世界坐标系）下
-    装甲板集合
+ * @brief 某一时刻在云台/世界坐标系下的装甲板集合。
  */
 class IArmorInGimbalControl {
 
 public:
-    /// 获取时间戳，标志其内容装甲板的准确时间点
+    /// 返回集合对应的时间戳，用于控制延迟补偿。
     virtual const data::TimeStamp& GetTimeStamp() const = 0;
 
-    /// 获取某个车辆ID的装甲板集合
+    /// 获取指定车辆 ID 的装甲板集合。
     virtual const std::vector<data::ArmorGimbalControlSpacing>& GetArmors(
         const enumeration::ArmorIdFlag& armor_id) const = 0;
 

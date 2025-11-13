@@ -1,3 +1,8 @@
+/**
+ * @file src/util/parameters/profile.cpp
+ * @brief Parameter manager for Profile.
+ */
+
 #include "parameters/profile.hpp"
 #include <opencv2/core/types.hpp>
 

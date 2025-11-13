@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/solver/reprojection_util.hpp
+ * @brief Pose solving utilities for Reprojection Util.
+ */
+
 #pragma once
 
 #include <cstdlib>
@@ -16,11 +21,17 @@
 
 namespace world_exe::tongji::solver {
 
+/**
+ * @brief 辅助计算装甲板重投影误差与可视化点。
+ */
 class ReprojectionUtil {
 public:
     ReprojectionUtil()  = default;
     ~ReprojectionUtil() = default;
 
+    /**
+     * @brief 计算装甲板重投影误差。
+     */
     double CalculateReprojectionError(const Eigen::Matrix3d& R_camera2gimbal,
         const Eigen::Vector3d& t_gimbal2camera,
         const world_exe::data::ArmorImageSpacing& armor_in_image,
@@ -41,6 +52,9 @@ public:
     }
 
 private:
+    /**
+     * @brief 将三维装甲板重新投影到图像平面。
+     */
     std::vector<cv::Point2d> ReprojectArmor(const Eigen::Matrix3d& R_camera2gimbal,
         const Eigen::Vector3d& t_gimbal2camera, const Eigen::Vector3d& armor_xyz_in_gimbal,
         const double& armor_yaw, const double& armor_pitch, const bool& is_large) const {
@@ -84,6 +98,9 @@ private:
         return image_points;
     }
 
+    /**
+     * @brief 斜率/距离混合代价函数。
+     */
     double SJTU_cost(const std::vector<cv::Point2d>& cv_refs,
         const std::vector<cv::Point2d>& cv_pts, const double& inclined) const {
         std::size_t size = cv_refs.size();

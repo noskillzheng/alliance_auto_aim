@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/predictor/predictor_manager.cpp
+ * @brief Predictor component for Predictor Manager.
+ */
+
 #include "predictor_manager.hpp"
 #include "car/car_predictor.hpp"
 #include "car/car_predictor_ekf.hpp"

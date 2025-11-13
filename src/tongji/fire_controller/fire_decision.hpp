@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/fire_controller/fire_decision.hpp
+ * @brief Fire-control component for Fire Decision.
+ */
+
 #pragma once
 
 #include <Eigen/Dense>
@@ -7,13 +12,22 @@
 #include <yaml-cpp/yaml.h>
 
 namespace world_exe::tongji::fire_control {
+/**
+ * @brief 云台指令（目标 yaw/pitch）。
+ */
 struct GimbalCommand {
     double yaw;
     double pitch;
 };
 
+/**
+ * @brief 决定是否允许自动开火的判定器。
+ */
 class FireDecision {
 public:
+    /**
+     * @brief 从配置加载容差和距离阈值。
+     */
     explicit FireDecision(const std::string& config_path)
         : last_gimbal_command_({ std::numeric_limits<double>::quiet_NaN(),
               std::numeric_limits<double>::quiet_NaN() }) {
@@ -24,6 +38,13 @@ public:
         judge_distance_   = yaml["judge_distance"].as<double>();
     }
 
+    /**
+     * @brief 判断当前帧是否允许开火。
+     *
+     * @param gimbal_yaw 当前云台 yaw
+     * @param gimbal_command 目标指令
+     * @param valid_target_pos 目标位置，用以区分远近
+     */
     bool ShouldFire(const double& gimbal_yaw, GimbalCommand gimbal_command,
         const Eigen::Vector3d& valid_target_pos) {
 
@@ -46,7 +67,7 @@ public:
 
 private:
     bool auto_fire_;
-    GimbalCommand last_gimbal_command_;
+    GimbalCommand last_gimbal_command_; ///< 最近一次下发的云台指令
 
     double first_tolerance_ { 5 };  // 近距离射击容差，degree
     double second_tolerance_ { 2 }; // 远距离射击容差，degree

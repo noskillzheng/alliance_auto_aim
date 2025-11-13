@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/state_machine/state_machine.cpp
+ * @brief State machine logic for State Machine.
+ */
+
 #include "state_machine.hpp"
 
 #include <memory>

@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/identifier/classifier.hpp
+ * @brief Target identifier module for Classifier.
+ */
+
 #pragma once
 
 #include <opencv2/core/mat.hpp>
@@ -14,8 +19,14 @@
 namespace world_exe::tongji::identifier {
 
 // TODO:早期代码，和深大模型不适配，需要TODOTODO
+/**
+ * @brief 装甲板图像分类器，支持 OpenCV DNN 与 OpenVINO 推理。
+ */
 class Classifier final {
 public:
+    /**
+     * @brief 读取分类模型及输入尺寸。
+     */
     explicit Classifier(const std::string& config_path) {
         const auto yaml       = YAML::Load(config_path);
         const auto model_path = yaml["classify_model"].as<std::string>();
@@ -28,6 +39,13 @@ public:
             ovmodel, "AUTO", ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY));
     }
 
+    /**
+     * @brief 使用 OpenCV DNN 运行分类。
+     *
+     * @param armor_pattern 预处理后的 ROI
+     * @param armor_id 输出装甲 ID
+     * @param armor_confidence 分类概率
+     */
     void Classify(const cv::Mat& armor_pattern, enumeration::ArmorIdFlag& armor_id,
         double& armor_confidence) {
         if (armor_pattern.empty()) {
@@ -84,6 +102,9 @@ public:
         };
     }
 
+    /**
+     * @brief 使用 OpenVINO 后端进行分类以降低延迟。
+     */
     void OvClassify(const cv::Mat& armor_pattern, enumeration::ArmorIdFlag& armor_id,
         double& armor_confidence) {
         if (armor_pattern.empty()) {
@@ -154,7 +175,7 @@ private:
     ov::Core core_;
     ov::CompiledModel compiled_model_;
 
-    int model_image_height_ = 640;
-    int model_image_width_  = 640;
+    int model_image_height_ = 640; ///< 模型输入高度
+    int model_image_width_  = 640; ///< 模型输入宽度
 };
 }

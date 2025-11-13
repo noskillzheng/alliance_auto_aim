@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/identifier/identifier_armor.hpp
+ * @brief Target identifier module for Identifier Armor.
+ */
+
 #pragma once
 
 #include "interfaces/armor_in_image.hpp"
@@ -6,6 +11,9 @@
 #include <ctime>
 
 namespace world_exe::v1::identifier {
+/**
+ * @brief V1 版本识别结果的容器，实现 `IArmorInImage`。
+ */
 class IdentifierArmor final : public interfaces::IArmorInImage {
 public:
     IdentifierArmor() = default;

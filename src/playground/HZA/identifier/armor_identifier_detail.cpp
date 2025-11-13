@@ -1,3 +1,8 @@
+/**
+ * @file src/playground/HZA/identifier/armor_identifier_detail.cpp
+ * @brief Target identifier module for Armor Identifier Detail.
+ */
+
 #include "armor_image_detail.hpp"
 #include "armor_identifier_detail.hpp"
 #include <cmath>

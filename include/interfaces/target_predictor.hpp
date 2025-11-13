@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/target_predictor.hpp
+ * @brief Predictor component for Target Predictor.
+ */
+
 #pragma once
 
 #include "armor_in_gimbal_control.hpp"
@@ -10,26 +15,23 @@
 namespace world_exe::interfaces {
 
 /**
- * @brief 类似IPredictor但是其内容不保证稳定
+ * @brief 在线目标预测接口，通常封装多个 `IPredictor` 实例。
  *
+ * 返回的结果通常是当前最可信的目标轨迹快照，而非静态记录。
  */
 class ITargetPredictor {
 public:
     /**
-     * @brief
+     * @brief 直接预测指定车辆在给定时间的装甲板集合。
      *
-     * @param id
-     * @param time_stamp
-     * @return std::shared_ptr<interfaces::IArmorInGimbalControl>
+     * @param id 目标车辆 ID
+     * @param time_stamp 目标时间戳
      */
     virtual std::shared_ptr<interfaces::IArmorInGimbalControl> Predict(
         const enumeration::ArmorIdFlag& id, const data::TimeStamp& time_stamp) = 0;
 
     /**
-     * @brief 按照传入的id生成IPredictor
-     *
-     * @param id
-     * @return const IPredictor&
+     * @brief 获取某车辆对应的持久化预测器对象。
      */
     virtual std::shared_ptr<IPredictor> GetPredictor(const enumeration::ArmorIdFlag& id) const = 0;
 

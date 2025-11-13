@@ -1,3 +1,8 @@
+/**
+ * @file src/playground/HZA/identifier/armor_image_detail.cpp
+ * @brief Target identifier module for Armor Image Detail.
+ */
+
 #include "armor_image_detail.hpp"
 
 namespace world_exe::interfaces::detail {

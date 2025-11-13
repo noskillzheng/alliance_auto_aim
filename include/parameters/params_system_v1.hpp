@@ -1,11 +1,28 @@
+/**
+ * @file include/parameters/params_system_v1.hpp
+ * @brief Parameter manager for Params System V1.
+ */
+
 
 #pragma once
 #include <memory>
 #include <string>
 
 namespace world_exe::parameters {
+/**
+ * @brief V1 系统使用的相机与火控参数集合及事件名称。
+ */
 struct ParamsForSystemV1 {
 public:
+    /**
+     * @brief 初始化相机内参。
+     *
+     * @param fx 焦距 (x)
+     * @param fy 焦距 (y)
+     * @param cx 主点 x
+     * @param cy 主点 y
+     * @param k1/k2/k3 畸变参数
+     */
     ParamsForSystemV1(const double& fx, const double& fy, const double& cx, const double& cy,
         const double& k1, const double& k2, const double& k3);
 
@@ -38,6 +55,7 @@ public:
     inline static const std::string fire_control_event //
         = "/alliance_auto_aim/fire";
 
+    /// 设置/读取识别模型路径、运行设备以及弹道参数。
     static void set_szu_model_path(std::string model_path); // = "path/to/szu_identify_model.onnx";
     static void set_device(std::string device);             //= "AUTO";
     static void set_control_delay_in_second(double control_delay_in_second); // = 0.05;

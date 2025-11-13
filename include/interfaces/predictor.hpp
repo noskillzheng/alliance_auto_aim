@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/predictor.hpp
+ * @brief Predictor component for Predictor.
+ */
+
 #pragma once
 
 #include "armor_in_gimbal_control.hpp"
@@ -7,22 +12,22 @@
 
 namespace world_exe::interfaces {
 /**
- * @brief 预测器，通常通过某一个时刻的状态向量x 及其状态转移矩阵: x' = Ax + Bu 获取未来状态向量x'
- * 继承自这个接口的类一般是Record, 创建后内容不会改变
+ * @brief 装甲板轨迹预测器抽象。
+ *
+ * 典型实现会维护状态向量 \f$x\f$ 及状态转移 \f{x' = Ax + Bu}\f，
+ * 从而外推未来某时刻的目标姿态。
  */
 class IPredictor {
 public:
     /**
-     * @brief 获取当前预测器可以进行预测的所有车辆ID
-     *
-     * @return const enumeration::ArmorIdFlag&
+     * @brief 返回当前预测器负责的车辆 ID ，可用于调度多预测器。
      */
     virtual const enumeration::ArmorIdFlag& GetId() const = 0;
     /**
-     * @brief 求解出未来某个时间的装甲板集合
+     * @brief 预测未来某个时间点的装甲板位姿。
      *
-     * @param time_stamp 未来的某个时间点
-     * @return const IArmorInGimbalControl&
+     * @param time_stamp 目标时间戳（通常为追踪基准时间 + 控制延迟）
+     * @return 装甲板在云台坐标系下的集合
      */
     virtual std::shared_ptr<IArmorInGimbalControl> Predictor(
         const data::TimeStamp& time_stamp) const = 0;

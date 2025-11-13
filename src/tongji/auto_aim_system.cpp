@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/auto_aim_system.cpp
+ * @brief Auto-aim orchestration for Auto Aim System.
+ */
+
 #include "auto_aim_system.hpp"
 
 #include <chrono>

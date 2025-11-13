@@ -1,3 +1,8 @@
+/**
+ * @file src/util/coordinate.hpp
+ * @brief Utility helper for Coordinate.
+ */
+
 #pragma once
 
 #include <Eigen/Dense>

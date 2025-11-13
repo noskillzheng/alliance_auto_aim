@@ -1,3 +1,8 @@
+/**
+ * @file src/util/optimizer/fibonacci.hpp
+ * @brief Utility helper for Fibonacci.
+ */
+
 #pragma once
 
 #include <utility>

@@ -1,3 +1,8 @@
+/**
+ * @file include/data/armor_gimbal_control_spacing.hpp
+ * @brief Data definitions for Armor Gimbal Control Spacing.
+ */
+
 #pragma once
 
 #include "enum/armor_id.hpp"
@@ -8,16 +13,15 @@
 #include <opencv2/core/types.hpp>
 
 namespace world_exe::data {
+/**
+ * @brief 云台控制坐标系下的装甲板记录。
+ */
 struct ArmorGimbalControlSpacing {
+    /// 装甲板所属车辆 ID。
     enumeration::ArmorIdFlag id = enumeration::ArmorIdFlag::Unknow;
-    /// 以ROS系，光轴方向为x, 上为z,
-    /// 四个点为： 1->左上 2->右上 3->右下 4->左下,
-    /// 点实际坐标云台控制向量坐标系下的笛卡尔坐标，单位米（m）,
-    /// 原点位于光心
+    /// 云台/世界坐标系下的位置（米），X 指向枪口。
     Eigen::Vector3d position;
-    /// 基础以控制向量坐标系
-    /// 装甲以控制向量坐标系，数字向车为x, 短轴数字向上为z
-    /// 表示 基础-》装甲板
+    /// 表示从云台基座到装甲板局部系的旋转。
     Eigen::Quaterniond orientation;
 };
 }

@@ -1,3 +1,8 @@
+/**
+ * @file src/playground/HZA/identifier/armor_identifier_detail.hpp
+ * @brief Target identifier module for Armor Identifier Detail.
+ */
+
 #pragma once
 #include "interfaces/identifier.hpp"
 

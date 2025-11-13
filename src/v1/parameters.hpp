@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/parameters.hpp
+ * @brief Parameter manager for Parameters.
+ */
+
 
 #pragma once
 #include <string>

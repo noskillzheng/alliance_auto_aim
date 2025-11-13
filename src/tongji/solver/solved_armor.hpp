@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/solver/solved_armor.hpp
+ * @brief Pose solving utilities for Solved Armor.
+ */
+
 #pragma once
 
 #include <array>
@@ -8,6 +13,9 @@
 #include "util/index.hpp"
 
 namespace world_exe::tongji::solver {
+/**
+ * @brief 通过 PnP 求解得到的装甲板集合。
+ */
 class SolvedArmor final : public interfaces::IArmorInCamera {
 public:
     explicit SolvedArmor(const std::vector<data::ArmorCameraSpacing>& armors, data::TimeStamp when_image_come)

@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/fire_controller/fire_controller.hpp
+ * @brief Fire-control component for Fire Controller.
+ */
+
 #pragma once
 
 #include "data/fire_control.hpp"
@@ -6,6 +11,9 @@
 #include <chrono>
 #include <memory>
 namespace world_exe::v1::fire_control {
+/**
+ * @brief V1 版本的火控实现，按预测器输出生成云台指令。
+ */
 class TracingFireControl final : public interfaces::IFireControl {
 public:
     const data::FireControl CalculateTarget(const std::chrono::seconds& time_duration) const override;

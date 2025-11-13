@@ -1,9 +1,17 @@
+/**
+ * @file src/v1/predictor/predict_armor_in_gimbal_control.hpp
+ * @brief Predictor component for Predict Armor In Gimbal Control.
+ */
+
 #pragma once
 
 #include "data/time_stamped.hpp"
 #include "interfaces/armor_in_gimbal_control.hpp"
 
 namespace world_exe::v1::predictor {
+/**
+ * @brief V1 版本预测输出的 `IArmorInGimbalControl` 实现。
+ */
 class PredictArmorInGimbalControl final : public world_exe::interfaces::IArmorInGimbalControl {
 public:
     PredictArmorInGimbalControl();

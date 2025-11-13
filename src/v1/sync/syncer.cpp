@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/sync/syncer.cpp
+ * @brief Synchronization helper for Syncer.
+ */
+
 
 #include "v1/sync/syncer.hpp"
 #include "data/sync_data.hpp"

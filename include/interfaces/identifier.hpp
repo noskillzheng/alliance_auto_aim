@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/identifier.hpp
+ * @brief Target identifier module for Identifier.
+ */
+
 #pragma once
 
 #include "enum/car_id.hpp"
@@ -8,15 +13,15 @@
 namespace world_exe::interfaces {
 
 /**
- * @brief 识别器
+ * @brief 自瞄装甲板识别器接口。
  */
 class IIdentifier {
 public:
     /**
-     * @brief 识别传入画面中所有的装甲板及其ID
+     * @brief 对输入图像进行识别，输出装甲板集合及主 ID。
      *
-     * @param input_image 相机捕捉到的画面
-     * @return const std::tuple<const std::shared_ptr<IArmorInImage>, enumeration::CarIDFlag>
+     * @param input_image 原始相机图像
+     * @return 识别出的装甲板集合及其主要目标 ID
      */
     virtual const std::tuple<const std::shared_ptr<IArmorInImage>, enumeration::CarIDFlag> identify(
         const cv::Mat& input_image) = 0;

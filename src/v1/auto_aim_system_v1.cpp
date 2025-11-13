@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/auto_aim_system_v1.cpp
+ * @brief Auto-aim orchestration for Auto Aim System V1.
+ */
+
 #include "./auto_aim_system_v1.hpp"
 #include "core/event_bus.hpp"
 #include "data/fire_control.hpp"

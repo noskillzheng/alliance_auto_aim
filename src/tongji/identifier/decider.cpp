@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/identifier/decider.cpp
+ * @brief Target identifier module for Decider.
+ */
+
 #include "decider.hpp"
 
 #include <algorithm>

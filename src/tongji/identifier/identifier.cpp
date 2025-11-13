@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/identifier/identifier.cpp
+ * @brief Target identifier module for Identifier.
+ */
+
 #include "identifier.hpp"
 
 #include <algorithm>
@@ -214,12 +219,16 @@ private:
 
     cv::Mat GetPattern(const cv::Mat& bgr_img, const Lightbar& left_lightbar,
         const Lightbar& right_lightbar) const {
-        // 延长灯条获得装甲板角点
-        // 1.125 = 0.5 * armor_height / lightbar_length = 0.5 * 126mm / 56mm
-        auto tl = left_lightbar.center - left_lightbar.top2bottom * 1.125;
-        auto bl = left_lightbar.center + left_lightbar.top2bottom * 1.125;
-        auto tr = right_lightbar.center - right_lightbar.top2bottom * 1.125;
-        auto br = right_lightbar.center + right_lightbar.top2bottom * 1.125;
+        // 延长灯条以获取装甲板完整角点
+        // 延长系数 = 0.5 * armor_height / lightbar_length = 0.5 * 126mm / 56mm = 1.125
+        // 说明：装甲板高度（126mm）是灯条长度（56mm）的约2.25倍
+        //       因此从灯条中心向上下各延长1.125倍灯条长度，得到装甲板上下边界
+        static constexpr double ARMOR_EXTEND_RATIO = 1.125;
+
+        auto tl = left_lightbar.center - left_lightbar.top2bottom * ARMOR_EXTEND_RATIO;   // 左上角
+        auto bl = left_lightbar.center + left_lightbar.top2bottom * ARMOR_EXTEND_RATIO;   // 左下角
+        auto tr = right_lightbar.center - right_lightbar.top2bottom * ARMOR_EXTEND_RATIO; // 右上角
+        auto br = right_lightbar.center + right_lightbar.top2bottom * ARMOR_EXTEND_RATIO; // 右下角
 
         auto roi_left   = std::max<int>(std::min(tl.x, bl.x), 0);
         auto roi_top    = std::max<int>(std::min(tl.y, tr.y), 0);

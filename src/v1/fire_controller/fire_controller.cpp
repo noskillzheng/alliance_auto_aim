@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/fire_controller/fire_controller.cpp
+ * @brief Fire-control component for Fire Controller.
+ */
+
 
 #include "./fire_controller.hpp"
 #include "data/time_stamped.hpp"

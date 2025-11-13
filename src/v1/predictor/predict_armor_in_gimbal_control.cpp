@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/predictor/predict_armor_in_gimbal_control.cpp
+ * @brief Predictor component for Predict Armor In Gimbal Control.
+ */
+
 #include "predict_armor_in_gimbal_control.hpp"
 
 #include "data/time_stamped.hpp"

@@ -1,3 +1,8 @@
+/**
+ * @file include/data/fire_control.hpp
+ * @brief Data definitions for Fire Control.
+ */
+
 #pragma once
 
 #include "data/time_stamped.hpp"
@@ -7,12 +12,15 @@
 #include <opencv2/core/core.hpp>
 
 namespace world_exe::data {
+/**
+ * @brief 火控指令，包含云台目标姿态与开火许可。
+ */
 struct FireControl {
+    /// 指令生成的参考时间。
     data::TimeStamp time_stamp;
-    /// 以ROS系，光轴方向为x, 上为z,
-    /// 四个点为： 1->左上 2->右上 3->右下 4->左下,
-    /// 点实际坐标为opencv系下的像素坐标
+    /// 目标云台方向向量（yaw, pitch, roll），单位 rad。
     Eigen::Vector3d gimbal_dir;
+    /// 是否允许当前帧触发发射机构。
     bool fire_allowance = false;
 };
 }

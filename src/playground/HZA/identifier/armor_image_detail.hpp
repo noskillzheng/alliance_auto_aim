@@ -1,3 +1,8 @@
+/**
+ * @file src/playground/HZA/identifier/armor_image_detail.hpp
+ * @brief Target identifier module for Armor Image Detail.
+ */
+
 #pragma once
 #include "interfaces/armor_in_image.hpp"
 #include "data/time_stamped.hpp"

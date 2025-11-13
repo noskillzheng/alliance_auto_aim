@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/predictor/car/car_predictor.cpp
+ * @brief Predictor component for Car Predictor.
+ */
+
 #include "car_predictor.hpp"
 #include "../predict_armor_in_gimbal_control.hpp"
 #include "data/time_stamped.hpp"

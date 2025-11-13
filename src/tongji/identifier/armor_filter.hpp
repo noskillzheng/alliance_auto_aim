@@ -1,3 +1,8 @@
+/**
+ * @file src/tongji/identifier/armor_filter.hpp
+ * @brief Target identifier module for Armor Filter.
+ */
+
 #pragma once
 
 #include <ranges>
@@ -12,11 +17,17 @@
 
 namespace world_exe::tongji::identifier {
 
+/**
+ * @brief 装甲板过滤器：剔除指定 ID 或暂不可打的目标。
+ */
 class ArmorFilter {
 public:
     explicit ArmorFilter()
         : invincible_armor_({ }) { }
 
+    /**
+     * @brief 根据黑名单过滤装甲板集合。
+     */
     auto FilterArmor(std::vector<data::ArmorImageSpacing> const& armors) const {
         // 25赛季没有5号装甲板
         // 不打前哨站
@@ -30,6 +41,9 @@ public:
         return std::vector<data::ArmorImageSpacing>(filtered.begin(), filtered.end());
     }
 
+    /**
+     * @brief 根据当前无敌车辆 ID 更新过滤列表。
+     */
     void Update(enumeration::CarIDFlag ids) {
         invincible_armor_.clear();
         for (auto id : util::enumeration::ExpandArmorIdFlags(ids)) {
@@ -38,6 +52,6 @@ public:
     }
 
 private:
-    std::unordered_set<enumeration::ArmorIdFlag> invincible_armor_;
+    std::unordered_set<enumeration::ArmorIdFlag> invincible_armor_; ///< 当前不可攻击的装甲板
 };
 }

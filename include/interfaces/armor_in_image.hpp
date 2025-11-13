@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/armor_in_image.hpp
+ * @brief Interface abstraction for Armor In Image.
+ */
+
 #pragma once
 
 #include "data/armor_image_spaceing.hpp"
@@ -9,13 +14,10 @@
 namespace world_exe::interfaces {
 
 /**
- * @brief
-    某一确定时刻
-    相机的画面坐标系下
-    装甲板集合
- * @warning
-    ArmorImageSpacing 为二维装甲板
-    其实际坐标系可以看作以相机光轴为x，光心为原点的 x-forward y-up 实体坐标系
+ * @brief 某一时刻相机图像坐标系下的装甲板集合。
+ *
+ * @warning ArmorImageSpacing 虽为二维描述，但可视为以相机光轴为 X、光心为原点的
+ * x-forward y-up 实体坐标，便于后续 PnP 计算。
  */
 class IArmorInImage {
 

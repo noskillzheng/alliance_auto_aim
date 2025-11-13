@@ -1,11 +1,20 @@
+/**
+ * @file src/tongji/identifier/identifier.hpp
+ * @brief Target identifier module for Identifier.
+ */
+
 #pragma once
 
 #include "interfaces/identifier.hpp"
 
 namespace world_exe::tongji::identifier {
 
+/// 相机识别到的灯条颜色。
 enum Color { red, blue, extinguish, purple };
 
+/**
+ * @brief 灯条几何特征，包含位置、角度与形状信息。
+ */
 struct Lightbar {
     std::size_t id;
     Color color;
@@ -38,15 +47,24 @@ struct Lightbar {
     }
 };
 
+/**
+ * @brief Tongji 版本的图像识别器入口。
+ */
 class Identifier final : public interfaces::IIdentifier {
 public:
     explicit Identifier(const std::string& config_path, const std::string& save_path,
         const bool& debug = true, const bool& record = false);
     ~Identifier();
 
+    /**
+     * @brief 识别输入图像，返回装甲板集合与主 ID。
+     */
     const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
     identify(const cv::Mat& input_image) override;
 
+    /**
+     * @brief 设定当前跟踪的目标颜色。
+     */
     void SetTargetColor(Color target_color);
 
     Identifier(const Identifier&)                = delete;

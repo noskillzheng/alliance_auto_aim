@@ -1,3 +1,8 @@
+/**
+ * @file include/interfaces/car_state.hpp
+ * @brief Interface abstraction for Car State.
+ */
+
 #pragma once
 
 #include "enum/car_id.hpp"
@@ -6,17 +11,13 @@
 namespace world_exe::interfaces {
 
 /**
- * @brief
- ** 确定自瞄系统中某个ID代表的车辆是否可以进行云台锁定、开火
- * @todo 命名鬼才，可能要改下命名
+ * @brief 负责确定自瞄系统中各车辆的可攻击状态。
  */
 class ICarState {
 
 public:
     /**
-     * @brief
-        获取可以开火的车辆ID
-        示例： 某辆车在镜头中出现的时间够长，确定已经被自瞄系统追踪上
+     * @brief 返回当前允许开火的车辆集合。
      */
     virtual const enumeration::CarIDFlag& GetAllowdToFires() const = 0;
 

@@ -1,3 +1,8 @@
+/**
+ * @file src/util/visaulization.cpp
+ * @brief Utility helper for Visaulization.
+ */
+
 #include "data/armor_camera_spacing.hpp"
 #include "data/armor_image_spaceing.hpp"
 #include "enum/armor_id.hpp"

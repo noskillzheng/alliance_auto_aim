@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/fire_controller/trajectory.hpp
+ * @brief Fire-control component for Trajectory.
+ */
+
 #pragma once
 
 #include <Eigen/Eigen>
@@ -7,9 +12,10 @@
 #include <tuple>
 
 namespace world_exe::v1::fire_control::trajectory_solver {
-/// returns:
-///      fly time in nano second
-///      dir(normalized) in control spacing
+/**
+ * @brief 仅考虑重力的弹道求解。
+ * @return (飞行时间ns, 云台方向单位向量)
+ */
 static std::tuple<const std::time_t, const Eigen::Vector3d> gravity_only(
     const Eigen::Vector3d& target, const double& v, const double& g) {
     double yaw                = atan2(target.y(), target.x());

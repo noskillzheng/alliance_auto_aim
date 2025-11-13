@@ -1,3 +1,8 @@
+/**
+ * @file src/util/logger.hpp
+ * @brief Utility helper for Logger.
+ */
+
 #pragma once
 
 #include <spdlog/spdlog.h>

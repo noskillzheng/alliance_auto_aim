@@ -1,3 +1,8 @@
+/**
+ * @file src/core/system_factory.cpp
+ * @brief Core infrastructure for System Factory.
+ */
+
 
 #include "core/system_factory.hpp"
 #include "../v1/auto_aim_system_v1.hpp"

@@ -1,3 +1,8 @@
+/**
+ * @file src/v1/state_machine/state_machine.cpp
+ * @brief State machine logic for State Machine.
+ */
+
 #include "state_machine.hpp"
 #include "enum/car_id.hpp"
 #include "interfaces/car_state.hpp"

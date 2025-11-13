@@ -1,9 +1,17 @@
+/**
+ * @file src/v1/identifier/identifier.hpp
+ * @brief Target identifier module for Identifier.
+ */
+
 #pragma once
 
 #include "interfaces/identifier.hpp"
 #include <memory>
 
 namespace world_exe::v1::identifier {
+/**
+ * @brief V1 版本装甲板识别器，包装旧推理实现。
+ */
 class Identifier : public interfaces::IIdentifier {
 public:
     Identifier(const std::string& model_path, const std::string& device,
