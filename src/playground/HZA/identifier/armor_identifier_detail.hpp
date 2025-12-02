@@ -8,7 +8,8 @@ public:
     ArmorIdentifier();
     virtual ~ArmorIdentifier() = default;
 
-    const std::tuple<const std::shared_ptr<world_exe::interfaces::IArmorInImage>,world_exe::enumeration::CarIDFlag> identify(const cv::Mat& input_image) override;
+    const std::tuple<const std::shared_ptr<world_exe::interfaces::IArmorInImage>,world_exe::enumeration::CarIDFlag> identify(
+        const cv::Mat& input_image, const data::TimeStamp& timestamp) override;
     cv::Mat image_output;
 
 private:

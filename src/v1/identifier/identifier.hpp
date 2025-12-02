@@ -14,7 +14,7 @@ public:
     void SetTargetColor(bool target_color);
 
     const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
-    identify(const cv::Mat& input_image) override;
+    identify(const cv::Mat& input_image, const data::TimeStamp& timestamp) override;
     void set_match_magnification_ratio(const double& ratio);
 
 private:

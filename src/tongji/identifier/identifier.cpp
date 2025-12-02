@@ -53,8 +53,9 @@ public:
 
     void SetTargetColor(Color target_color) { target_color_ = target_color; }
 
-    const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
-    Identify(const cv::Mat& bgr_img) {
+    std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag> Identify(
+        const cv::Mat& bgr_img, const data::TimeStamp& timestamp) {
+        static_cast<void>(timestamp);
         // 彩色图转灰度图
         cv::Mat gray_img;
         cv::cvtColor(bgr_img, gray_img, cv::COLOR_BGR2GRAY);
@@ -201,7 +202,7 @@ private:
         cv::imwrite(img_path, armor_pattern);
     }
 
-    Color GetColor(const cv::Mat& bgr_img, const std::vector<cv::Point>& contour) const {
+    static Color GetColor(const cv::Mat& bgr_img, const std::vector<cv::Point>& contour) {
         int red_sum = 0, blue_sum = 0;
 
         for (const auto& point : contour) {
@@ -212,8 +213,8 @@ private:
         return blue_sum > red_sum ? Color::blue : Color::red;
     }
 
-    cv::Mat GetPattern(const cv::Mat& bgr_img, const Lightbar& left_lightbar,
-        const Lightbar& right_lightbar) const {
+    static cv::Mat GetPattern(
+        const cv::Mat& bgr_img, const Lightbar& left_lightbar, const Lightbar& right_lightbar) {
         // 延长灯条获得装甲板角点
         // 1.125 = 0.5 * armor_height / lightbar_length = 0.5 * 126mm / 56mm
         auto tl = left_lightbar.center - left_lightbar.top2bottom * 1.125;
@@ -232,13 +233,13 @@ private:
         return bgr_img(roi);
     }
 
-    cv::Point2f GetCenterNorm(const cv::Mat& bgr_img, const cv::Point2f& center) const {
+    static cv::Point2f GetCenterNorm(const cv::Mat& bgr_img, const cv::Point2f& center)  {
         auto h = bgr_img.rows;
         auto w = bgr_img.cols;
         return { center.x / w, center.y / h };
     }
 
-    bool IsLargeArmor(double armor_ratio, enumeration::ArmorIdFlag armor_id) const {
+    static bool IsLargeArmor(double armor_ratio, enumeration::ArmorIdFlag armor_id)  {
         /// 优先根据当前armor.ratio判断
         /// TODO: 26赛季是否还需要根据比例判断大小装甲？能否根据图案直接判断？
 
@@ -344,8 +345,8 @@ Identifier::Identifier(const std::string& config_path, const std::string& save_p
 Identifier::~Identifier() = default;
 
 const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
-Identifier::identify(const cv::Mat& input_image) {
-    return pimpl_->Identify(input_image);
+Identifier::identify(const cv::Mat& input_image, const data::TimeStamp& timestamp) {
+    return pimpl_->Identify(input_image, timestamp);
 }
 
 void Identifier::SetTargetColor(Color target_color) { return pimpl_->SetTargetColor(target_color); }

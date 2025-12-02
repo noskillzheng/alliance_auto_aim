@@ -6,7 +6,7 @@
 #include "interfaces/predictor.hpp"
 
 namespace world_exe::v1::predictor {
-class CarPredictor final: public interfaces::IPredictor {
+class CarPredictor final : public interfaces::IPredictor {
 public:
     CarPredictor();
     ~CarPredictor();

@@ -37,15 +37,21 @@ public:
         , image_height_(image_height)
         , width_ratio_(static_cast<double>(image_width_) / model_image_width_)
         , height_ratio_(static_cast<double>(image_height_) / model_image_height_) {
+
+
         // 此处主要是对模型推理的初始化
+
         ov::Core core_;
         const auto adevice = core_.get_available_devices();
+
         auto model_        = core_.read_model(model_path);
+
 
         std::unique_ptr<ov::preprocess::PrePostProcessor> pre_post_processor_ =
             std::make_unique<ov::preprocess::PrePostProcessor>(model_);
         ov::Shape input_shape_ { 1, model_image_height_, model_image_width_, 3 };
 
+        std::cout << "[Identifier::Impl] Configuring preprocessing" << std::endl;
         pre_post_processor_->input()
             .tensor()
             .set_element_type(ov::element::u8)
@@ -59,9 +65,13 @@ public:
             .scale({ 255., 255., 255. });
         pre_post_processor_->input().model().set_layout("NCHW");
         pre_post_processor_->output().tensor().set_element_type(ov::element::f32);
+
         model_ = pre_post_processor_->build();
 
         compiled_model_ = core_.compile_model(model_, device);
+
+
+        std::cout << "[Identifier::Impl] Constructor finished successfully" << std::endl;
     }
 
     /**
@@ -75,7 +85,7 @@ public:
      * @param input_image 输入的 BGR 格式图像(默认就是)
      */
     std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag> Identify(
-        const cv::Mat& input_image) {
+        const cv::Mat& input_image, const data::TimeStamp& timestamp) {
 
         // 首先使用深度学习模型进行装甲板检测得到roi区域
         const auto armor_infos = model_infer(input_image);
@@ -84,7 +94,7 @@ public:
         if (!a) {
             return { a, enumeration::CarIDFlag::None };
         }
-        a->time_stamp_ = std::chrono::steady_clock::now().time_since_epoch();
+        a->time_stamp_ = timestamp;
         return { a, b };
     }
 
@@ -420,8 +430,8 @@ Identifier::Identifier(const std::string& model_path, const std::string& device,
 void Identifier::SetTargetColor(bool target_color) { return pimpl_->SetTargetColor(target_color); }
 
 const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
-Identifier::identify(const cv::Mat& input_image) {
-    return pimpl_->Identify(input_image);
+Identifier::identify(const cv::Mat& input_image, const data::TimeStamp& timestamp) {
+    return pimpl_->Identify(input_image, timestamp);
 };
 
 void Identifier::set_match_magnification_ratio(const double& ratio) {

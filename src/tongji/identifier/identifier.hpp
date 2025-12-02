@@ -45,7 +45,7 @@ public:
     ~Identifier();
 
     const std::tuple<const std::shared_ptr<interfaces::IArmorInImage>, enumeration::CarIDFlag>
-    identify(const cv::Mat& input_image) override;
+    identify(const cv::Mat& input_image, const data::TimeStamp& timestamp) override;
 
     void SetTargetColor(Color target_color);
 

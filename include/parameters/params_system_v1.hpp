@@ -43,11 +43,13 @@ public:
     static void set_control_delay_in_second(double control_delay_in_second); // = 0.05;
     static void set_velocity_begin(double velocity_begin);                   //= 26;
     static void set_gravity(double gravity);                                 //= 9.81;
+    static void set_target_color(bool target_color);                         // true=RED, false=BLUE
     static std::string szu_model_path();     // = "path/to/szu_identify_model.onnx";
     static std::string device();             //= "AUTO";
     static double control_delay_in_second(); // = 0.05;
     static double velocity_begin();          //= 26;
     static double gravity();                 //= 9.81;
+    static bool target_color();              // true=RED, false=BLUE
 
 private:
     struct Impl;

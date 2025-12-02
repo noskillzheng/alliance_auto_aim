@@ -10,8 +10,8 @@ struct parameters::HikCameraProfile::Impl {
         , distortion_parameters((cv::Mat)(cv::Mat_<double>(1, 5) << k1, k2, 0, 0, k3)) { }
     void set_intrinsic_matrix(const double& fx, const double& fy, const double& cx,
         const double& cy, const double& k1, const double& k2, const double& k3) {
-        intrinsic_parameters((cv::Mat)(cv::Mat_<double>(3, 3) << fx, 0, cx, 0, fy, cy, 0, 0, 1));
-        distortion_parameters((cv::Mat)(cv::Mat_<double>(1, 5) << k1, k2, 0, 0, k3));
+        intrinsic_parameters = (cv::Mat)(cv::Mat_<double>(3, 3) << fx, 0, cx, 0, fy, cy, 0, 0, 1);
+        distortion_parameters = (cv::Mat)(cv::Mat_<double>(1, 5) << k1, k2, 0, 0, k3);
     }
 
     cv::Mat intrinsic_parameters;
@@ -42,4 +42,3 @@ std::unique_ptr<world_exe::parameters::HikCameraProfile::Impl>
     world_exe::parameters::HikCameraProfile::impl_ =
         std::make_unique<Impl>(1.722231837421459e+03, 1.724876404292754e+03, 7.013056440882832e+02,
             5.645821718351237e+02, -0.064232403853946, -0.087667493884102, 0.792381808294582);
-;

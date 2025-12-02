@@ -81,6 +81,7 @@ std::shared_ptr<world_exe::interfaces::IArmorInCamera> ArmorIPPEPnPSolver::Solve
                 armors_->armors[i].emplace_back(std::move(armor_in_camera.value()));
         }
     }
+    armors_->time_stampe = armors->GetTimeStamp();
     return armors_;
 }
 

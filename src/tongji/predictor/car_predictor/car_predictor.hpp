@@ -6,6 +6,7 @@
 #include <optional>
 
 #include <Eigen/Dense>
+#include <utility>
 
 #include "../in_gimbal_control_armor.hpp"
 #include "../kalman_filter/extended_kalman_filter.hpp"
@@ -22,10 +23,9 @@ public:
     using PredictorModel = EKFModel<11, 4>;
     using EKF            = ExtendedKalmanFilter<PredictorModel>;
 
-    explicit CarPredictor(
-        const EKF& ekf, const PredictorModel& model, const data::TimeStamp& time_stamp)
+    explicit CarPredictor(const EKF& ekf, PredictorModel model, const data::TimeStamp& time_stamp)
         : ekf_(ekf)
-        , model_(model)
+        , model_(std::move(model))
         , time_stamp_(time_stamp) { }
 
     explicit CarPredictor(const Eigen::Vector3d& armor_xyz_in_gimbal,
@@ -50,7 +50,6 @@ public:
 
         EKF::PMat P0 = model_.GetP0Dig().asDiagonal();
         ekf_.emplace(x0, P0, model_); // 初始化滤波器（预测量、预测量协方差）
-
     }
 
     const enumeration ::ArmorIdFlag& GetId() const override { return car_id_; }
@@ -58,6 +57,7 @@ public:
     std ::shared_ptr<interfaces::IArmorInGimbalControl> Predictor(
         const data ::TimeStamp& time_stamp) const override {
         const auto ekf_x = this->GetPredictedX((time_stamp - time_stamp_).to_seconds());
+
         std::vector<data::ArmorGimbalControlSpacing> armors;
         for (int id = 0; id < model_.GetArmorNum(); id++) {
             auto angle = util::math::clamp_pm_pi(ekf_x[6] + id * 2 * CV_PI / model_.GetArmorNum());
@@ -69,28 +69,20 @@ public:
             armor.orientation = util::math::euler_to_quaternion(angle, 15. / 180. * CV_PI, 0);
             armors.emplace_back(std::move(armor));
         }
-        return std::make_shared<InGimbalControlArmor>(armors, time_stamp_);
+        return std::make_shared<InGimbalControlArmor>(armors, time_stamp);
     }
 
     EKF::XVec GetEkfX() const { return ekf_->x; }
-    auto GetModel() const -> const PredictorModel { return model_; }
-    auto GetEkf() const -> const EKF { return ekf_.value(); }
+    auto GetModel() const -> PredictorModel { return model_; }
+    auto GetEkf() const -> EKF { return ekf_.value(); }
 
-    data::TimeStamp LastSeen() const { return time_stamp_; }
-
-    auto GetPredictedXYZAList(const double& dt) -> std::vector<Eigen::Vector4d> const {
-        const auto [x_n, P_n] = ekf_->PredictOnce(dt);
-        return model_.GetArmorXYZAList(x_n);
+    auto GetPredictedX(data::TimeStamp const& time_stamp) -> EKF::XVec {
+        auto dt = (time_stamp - time_stamp_).to_seconds();
+        return GetPredictedX(dt);
     }
 
-    auto GetPredictedX(const double& dt) const -> const EKF::XVec {
-        const auto& [x_n, P_n] = ekf_->PredictOnce(dt);
-        return x_n;
-    }
-
-    void Update(const data::TimeStamp time_stamp, const Eigen::Vector3d& armor_xyz_in_gimbal,
+    void Update(data::TimeStamp const& time_stamp, const Eigen::Vector3d& armor_xyz_in_gimbal,
         const Eigen::Vector3d& armor_ypr_in_gimbal, const Eigen::Vector3d& armor_ypd_in_gimbal) {
-
         // 装甲板匹配
         int id = model_.MatchArmor(
             ekf_->x, armor_xyz_in_gimbal, armor_ypr_in_gimbal, armor_ypd_in_gimbal);
@@ -118,6 +110,11 @@ public:
     }
 
 private:
+    auto GetPredictedX(double dt) const -> EKF::XVec {
+        const auto& [x_n, P_n] = ekf_->PredictOnce(dt);
+        return x_n;
+    }
+
     void Update_ypda(const Eigen::Vector3d& armor_xyz_in_gimbal,
         const Eigen::Vector3d& armor_ypr_in_gimbal, const Eigen::Vector3d& armor_ypd_in_gimbal,
         const int& id, const double& dt) {

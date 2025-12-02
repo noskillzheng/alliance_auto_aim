@@ -1,6 +1,7 @@
 #include "./auto_aim_system_v1.hpp"
 #include "core/event_bus.hpp"
 #include "data/fire_control.hpp"
+#include "data/mat_stamped.hpp"
 #include "data/sync_data.hpp"
 #include "enum/armor_id.hpp"
 #include "fire_controller/fire_controller.hpp"
@@ -25,7 +26,6 @@
 
 #include <cassert>
 #include <chrono>
-/// 这玩意全生命周期活跃，直接分配然后丢一边，反正有回调
 
 using namespace world_exe;
 using namespace v1;
@@ -35,16 +35,27 @@ using namespace std::chrono;
 
 class world_exe::v1::SystemV1::Impl{
 public:
-    Impl(const bool& debug) : debug(debug) {
+   explicit Impl(const bool& debug) : debug(debug) {
+        std::cerr << "[FORCE] Impl constructor START, debug=" << debug << std::endl;
         time_point_     = std::chrono::steady_clock::now();
         predictor       = std::make_shared<predictor::PredictorManager>(); 
         sync            = std::make_shared<world_exe::v1::Syncer>(seconds(2),6e-6);
         state_machine   = std::make_shared<world_exe::v1::state_machine::StateMachine>();
-        identifier      = std::make_shared<identifier::Identifier>(
-                            ParamsForSystemV1::szu_model_path(),
-                            ParamsForSystemV1::device(),
-                            HikCameraProfile::get_width(),
-                            HikCameraProfile::get_height());
+
+        std::cerr << "[FORCE] Creating Identifier with model=" << ParamsForSystemV1::szu_model_path()
+                  << ", device=" << ParamsForSystemV1::device() << std::endl;
+        try {
+            identifier      = std::make_shared<identifier::Identifier>(
+                                ParamsForSystemV1::szu_model_path(),
+                                ParamsForSystemV1::device(),
+                                HikCameraProfile::get_width(),
+                                HikCameraProfile::get_height());
+            std::cerr << "[FORCE] Identifier created successfully" << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "[FORCE] Identifier creation FAILED: " << e.what() << std::endl;
+            throw;
+        }
+
         fire_control    = std::make_shared<fire_control::TracingFireControl>(
                             ParamsForSystemV1::control_delay_in_second(),
                             ParamsForSystemV1::velocity_begin(),
@@ -55,28 +66,35 @@ public:
 
 
         fire_control    ->SetTargetCarID(enumeration::CarIDFlag::Base);
-        identifier      ->SetTargetColor(false);
+        identifier      ->SetTargetColor(ParamsForSystemV1::target_color());
         state_machine   ->SetSwitchFrameCount(4);
 
+        std::cerr << "[SystemV1] Auto-aim system initialized. Target color: "
+                  << (ParamsForSystemV1::target_color() ? "RED" : "BLUE") << std::endl;
 
-       core::EventBus::Subscript<cv::Mat>
-       (ParamsForSystemV1::raw_image_event,             [this](const auto& mat){solve(mat);});
+
+       core::EventBus::Subscript<data::MatStamped>
+       (ParamsForSystemV1::raw_image_event,             [this](const auto& mat_stamped){solve(mat_stamped);});
        core::EventBus::Subscript<data::CameraGimbalMuzzleSyncData>
        (ParamsForSystemV1::camera_capture_transforms,   [this](const auto& pkg){set_transfroms(pkg);});
+
+       std::cerr << "[FORCE] Impl constructor END, subscriptions done" << std::endl;
     }
 
 
     
-    void solve(const cv::Mat& raw){
-        
-        const auto& [armors, flag]  = identifier->identify(raw);
+    void solve(const data::MatStamped& mat_stamped){
+        const auto& timestamp       = mat_stamped.stamp;
+        const auto& raw             = mat_stamped.mat;
+
+        const auto& [armors, flag]  = identifier->identify(raw, timestamp);
 
         if(flag == enumeration::ArmorIdFlag::Unknow) return;
+        if (!armors) return;
 
         const auto& solved          = armor_pnp->SolvePnp(armors);
-
         const auto& [pack, check]   = sync->get_data(solved->GetTimeStamp());
-        
+
         if(!check) [[unlikely]]     return;
 
         time_point_                 = std::chrono::steady_clock::now();
@@ -87,15 +105,17 @@ public:
         const auto& time            = combined->GetTimeStamp();
         const auto& armor3d         = predictor->Predict(fire_targets,time);
         fire_control                ->set_armor(armor3d);
-        fire_control                ->SetPredictor(predictor->GetPredictor(fire_targets));
 
-        
-       core::EventBus::Publish<data::FireControl>(ParamsForSystemV1::fire_control_event, control());
+        if (fire_targets != enumeration::ArmorIdFlag::None)
+            fire_control->SetPredictor(predictor->GetPredictor(fire_targets));
+
+        core::EventBus::Publish<data::FireControl>(ParamsForSystemV1::fire_control_event, control());
 
         if(!debug) [[likely]]       return;
         
         const auto& target_id       = fire_control->GetAttackCarId();
-        const auto& target          = predictor->GetPredictor(target_id);
+        if (target_id != enumeration::ArmorIdFlag::None)
+            predictor->GetPredictor(target_id);
 
         core::EventBus::Publish<enumeration::CarIDFlag>(
             parameters::ParamsForSystemV1::car_id_identify_event, 
@@ -139,11 +159,15 @@ private:
 std::unique_ptr<SystemV1> SystemV1::v1;
 
 void world_exe::v1::SystemV1::build(const bool& debug) {
-    if (v1 != nullptr) return;
+    if (v1 != nullptr) {
+        return;
+    }
     v1 = std::make_unique<SystemV1>(debug);
+    std::cerr << "[FORCE] SystemV1 created, ptr=" << (void*)v1.get() << std::endl;
 }
 SystemV1::SystemV1(const bool& debug){
     instance_ = std::make_unique<Impl>(debug);
+    std::cerr << "[FORCE] SystemV1 constructor finished, Impl created" << std::endl;
 }
 
 SystemV1::~SystemV1(){};

@@ -21,8 +21,13 @@ public:
     }
 
     template <typename TData>
-    static void Subscript(const std::string& event_name, std::function<void(const TData&)>&& func) {
+    static size_t Subscript(const std::string& event_name, std::function<void(const TData&)>&& func) {
         return EventBusImpl<TData>::GetInstance().Subscript(event_name, std::move(func));
+    }
+
+    template <typename TData>
+    static void Unsubscribe(const std::string& event_name, size_t subscription_id) {
+        return EventBusImpl<TData>::GetInstance().Unsubscribe(event_name, subscription_id);
     }
 
 private:
@@ -54,11 +59,20 @@ private:
             // flag.store(false);
             return EventBus::BusStatus::OK;
         }
-        void Subscript(const std::string event_name, std::function<void(const TData&)>&& func) {
+        size_t Subscript(const std::string event_name, std::function<void(const TData&)>&& func) {
             const auto& [iterator, create_falg] = delegates.try_emplace(event_name);
             auto& [flag, vec]                   = iterator->second;
             if (!create_falg) flag.store(false);
             vec.emplace_back(func);
+            return vec.size() - 1;  // 返回订阅 ID
+        }
+
+        void Unsubscribe(const std::string& event_name, size_t subscription_id) {
+            if (!delegates.contains(event_name)) return;
+            auto& [flag, vec] = delegates[event_name];
+            if (subscription_id < vec.size()) {
+                vec.erase(vec.begin() + subscription_id);
+            }
         }
         static EventBusImpl<TData>& GetInstance() {
             static EventBusImpl<TData> instance_;

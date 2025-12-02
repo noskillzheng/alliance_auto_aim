@@ -8,8 +8,9 @@ namespace world_exe::interfaces::detail {
 ArmorIdentifier::ArmorIdentifier() {}
 
 const std::tuple<const std::shared_ptr<world_exe::interfaces::IArmorInImage>, world_exe::enumeration::CarIDFlag>
-ArmorIdentifier::identify(const cv::Mat& input_image)
+ArmorIdentifier::identify(const cv::Mat& input_image, const data::TimeStamp& timestamp)
 {
+    static_cast<void>(timestamp);
     process_image(input_image);
     const auto armors_cooy = armors_;
     auto armor_ptr = std::make_shared<world_exe::interfaces::detail::ArmorInImage>(armors_cooy);

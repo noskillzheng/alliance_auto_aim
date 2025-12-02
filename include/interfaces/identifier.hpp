@@ -1,5 +1,6 @@
 #pragma once
 
+#include "data/time_stamped.hpp"
 #include "enum/car_id.hpp"
 #include "interfaces/armor_in_image.hpp"
 #include <memory>
@@ -19,7 +20,7 @@ public:
      * @return const std::tuple<const std::shared_ptr<IArmorInImage>, enumeration::CarIDFlag>
      */
     virtual const std::tuple<const std::shared_ptr<IArmorInImage>, enumeration::CarIDFlag> identify(
-        const cv::Mat& input_image) = 0;
+        const cv::Mat& input_image, const data::TimeStamp& timestamp) = 0;
 
     virtual ~IIdentifier() = default;
 };

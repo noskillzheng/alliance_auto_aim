@@ -15,9 +15,8 @@ public:
 
     const enumeration ::CarIDFlag& GetAllowdToFires() const override;
 
-    void Update(std::shared_ptr<interfaces::IArmorInImage> armors_in_image,
-        const enumeration::CarIDFlag& invincible_armors,
-        const std::chrono::milliseconds& duration_from_last_update);
+    void Update(std::shared_ptr<interfaces::IArmorInImage> const& armors_in_image,
+        const enumeration::CarIDFlag& invincible_armors, data::TimeStamp const& time_stamp);
 
     void SetLostState();
 
